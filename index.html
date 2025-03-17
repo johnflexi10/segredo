@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagem Especial</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 90%;
+            margin: 20px auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: white;
+            padding-bottom: 20px;
+        }
+
+        .message {
+            padding: 25px;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            font-style: italic;
+            color: #505050;
+            background-color: #fafafa;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slides {
+            display: flex;
+            width: 300%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            width: 33.33%;
+            flex-shrink: 0;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            background-color: #ff6b95;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #ff4a7d;
+        }
+
+        .audio-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .music-btn {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .music-btn:hover {
+            background-color: #5a52e0;
+        }
+
+        .dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: #bbb;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: #ff6b95;
+        }
+
+        @media (max-width: 600px) {
+            .message {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message">
+            "Saudade é complicado... às vezes, a gente sente até do que nunca foi nosso. 👀"
+        </div>
+        
+        <div class="carousel">
+            <div class="slides">
+                <div class="slide">
+                    <img src="imagens/amor com saudade.png" alt="imagem">
+                </div>
+                <div class="slide">
+                    <img src="imagens/desenho de amor com saudade.png" alt="Imagem 2">
+                </div>
+                <div class="slide">
+                    <img src="imagens/coração apaixonado.png" alt="Imagem 3">
+                </div>
+            </div>
+        </div>
+        
+        <div class="dots">
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn prev" onclick="prevSlide()">Anterior</button>
+            <button class="nav-btn next" onclick="nextSlide()">Próxima</button>
+        </div>
+        
+        <div class="audio-controls">
+            <button class="music-btn" onclick="toggleMusic()">Tocar Música</button>
+        </div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="som/Calming relaxing music 30 seconds_.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio HTML5.
+    </audio>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.querySelector('.slides');
+        const totalSlides = document.querySelectorAll('.slide').length;
+        const dots = document.querySelectorAll('.dot');
+        const audio = document.getElementById('background-music');
+        const musicBtn = document.querySelector('.music-btn');
+        let isMusicPlaying = false;
+
+        // Atualiza a posição do carrossel
+        function updateCarousel() {
+            slides.style.transform = `translateX(-${currentIndex * 33.33}%)`;
+            
+            // Atualiza os pontos indicadores
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Avança para o próximo slide
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // Volta para o slide anterior
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Vai para um slide específico
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        // Controla a reprodução da música
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                audio.pause();
+                musicBtn.textContent = 'Tocar Música';
+            } else {
+                audio.play().catch(e => {
+                    console.log('Erro ao tocar música:', e);
+                    alert('Toque na tela para permitir a reprodução de áudio');
+                });
+                musicBtn.textContent = 'Pausar Música';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // Inicializa carousel com autoplay
+        let autoplayInterval = setInterval(nextSlide, 5000);
+
+        // Para o autoplay quando o usuário interagir com o carrossel
+        document.querySelector('.carousel').addEventListener('click', () => {
+            clearInterval(autoplayInterval);
+        });
+    </script>
+</body>
+</html>
